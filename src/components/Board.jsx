@@ -29,7 +29,7 @@ const snake = new DoublyLinkedList({
 });
 
 function Board() {
-  const [boards, setBoards] = useState(getBoards(BOARD_SIZE));
+  const boards = getBoards(BOARD_SIZE);
   const [food, setFood] = useState(22);
   const currentDirection = useRef('ArrowRight');
 
