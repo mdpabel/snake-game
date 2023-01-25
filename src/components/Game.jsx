@@ -10,16 +10,17 @@ const snake = new DoublyLinkedList({
 });
 
 const Game = () => {
-  const { moveSnake, food, snakeBody, score } = useGame(snake);
+  const { moveSnake, setIsGameOver, food, snakeBody, score } = useGame(snake);
 
   return (
     <div>
-      <div>score : {score} </div>
+      <div className='py-4 text-2xl text-center'>Score : {score} </div>
       <Board
         snake={snake}
         moveSnake={moveSnake}
         food={food}
         snakeBody={snakeBody}
+        setIsGameOver={setIsGameOver}
       />
     </div>
   );

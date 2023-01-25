@@ -1,14 +1,18 @@
 import { useCallback, useState } from 'react';
+import useSound from 'use-sound';
+
 import { BOARD_SIZE } from '../utils/getBoards';
 import { randomNumber } from '../utils/rendomNumber';
 import { useSetState } from './useSetState';
+import snakeFoodSound from '../assets/snakeSoundEating.mp3';
 
 const crossBoundary = [-1, BOARD_SIZE];
 
 export const useGame = (snake) => {
+  const [snakeFoodConsumedSound, { stop }] = useSound(snakeFoodSound);
   const [score, setScore] = useState(0);
   const [food, setFood] = useState(22);
-  const [isGameOver, isSetGameOver] = useState(false);
+  const [isGameOver, setIsGameOver] = useState(false);
 
   const snakeBody = useSetState([snake.head.val.cell]);
 
@@ -33,12 +37,13 @@ export const useGame = (snake) => {
       }
 
       if (crossBoundary.includes(newRow) || crossBoundary.includes(newCol)) {
-        isSetGameOver(true);
+        setIsGameOver(true);
         console.log('Game over');
         return;
       }
 
       if (newCell === food) {
+        snakeFoodConsumedSound();
         consumeFood({ newRow, newCell, newCol });
         setScore((prev) => prev + 1);
       } else {
@@ -61,7 +66,7 @@ export const useGame = (snake) => {
     food,
     setFood,
     isGameOver,
-    isSetGameOver,
+    setIsGameOver,
     snakeBody,
     score,
   };

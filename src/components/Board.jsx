@@ -18,7 +18,7 @@ const allowDirections = {
   ArrowUp: new Set(['ArrowUp', 'ArrowLeft', 'ArrowRight']),
 };
 
-function Board({ snake, moveSnake, food, snakeBody }) {
+function Board({ snake, moveSnake, food, snakeBody, setIsGameOver }) {
   const [direction, setDirection] = useState('ArrowRight');
   const boards = getBoards(BOARD_SIZE);
 
@@ -47,6 +47,11 @@ function Board({ snake, moveSnake, food, snakeBody }) {
     const newRow = snake.head.val.row + row;
     const newCol = snake.head.val.col + col;
     const newCell = getCell(newRow, newCol, BOARD_SIZE);
+
+    if (snakeBody.has(newCell)) {
+      setIsGameOver(true);
+      return;
+    }
 
     const intervalId = setInterval(
       () => moveSnake({ newRow, newCell, newCol }),
