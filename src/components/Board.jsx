@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSetState } from '../hooks/useSetState';
 import { DoublyLinkedList } from '../utils/DoublyLinkedList';
 import { getBoards } from '../utils/getBoards';
@@ -28,24 +28,15 @@ const snake = new DoublyLinkedList({
   cell: 45,
 });
 
+const crossBoundary = [-1, BOARD_SIZE];
+
 function Board() {
   const boards = getBoards(BOARD_SIZE);
   const [food, setFood] = useState(22);
-  const currentDirection = useRef('ArrowRight');
+  const [direction, setDirection] = useState('ArrowRight');
+  const [isGameOver, isSetGameOver] = useState(false);
 
   const snakeBody = useSetState([snake.head.val.cell]);
-
-  const moveSnake = ({ newCell, newCol, newRow }) => {
-    snakeBody.delete(snake.tail.val.cell);
-    snakeBody.add(newCell);
-
-    snake.removeTail();
-    snake.addToHead({
-      row: newRow,
-      col: newCol,
-      cell: newCell,
-    });
-  };
 
   const consumeFood = useCallback(
     ({ newRow, newCell, newCol }) => {
@@ -60,11 +51,40 @@ function Board() {
     [snakeBody, food]
   );
 
+  const moveSnake = useCallback(
+    ({ newCell, newCol, newRow }) => {
+      if (isGameOver) {
+        return;
+      }
+
+      if (crossBoundary.includes(newRow) || crossBoundary.includes(newCol)) {
+        isSetGameOver(true);
+        console.log('Game over');
+        return;
+      }
+
+      if (newCell === food) {
+        consumeFood({ newRow, newCell, newCol });
+      } else {
+        snakeBody.delete(snake.tail.val.cell);
+        snakeBody.add(newCell);
+
+        snake.removeTail();
+        snake.addToHead({
+          row: newRow,
+          col: newCol,
+          cell: newCell,
+        });
+      }
+    },
+    [isGameOver, food, snakeBody, consumeFood]
+  );
+
   const handleKeyDown = useCallback(
     (e) => {
-      const isAllowed =
-        currentDirection.current &&
-        allowDirections[currentDirection.current].has(e.key);
+      const isAllowed = direction && allowDirections[direction].has(e.key);
+
+      console.log(direction);
 
       if (!isAllowed) {
         return;
@@ -73,22 +93,26 @@ function Board() {
       if (!directions[e.key] || snake.length === 0 || e.key === '') {
         return;
       }
-      currentDirection.current = e.key;
 
-      const [row, col] = directions[e.key];
-
-      const newRow = snake.head.val.row + row;
-      const newCol = snake.head.val.col + col;
-      const newCell = getCell(newRow, newCol, BOARD_SIZE);
-
-      if (newCell === food) {
-        consumeFood({ newRow, newCell, newCol });
-      } else {
-        moveSnake({ newRow, newCell, newCol });
-      }
+      setDirection(e.key);
     },
-    [food]
+    [direction]
   );
+
+  useEffect(() => {
+    const [row, col] = directions[direction];
+
+    const newRow = snake.head.val.row + row;
+    const newCol = snake.head.val.col + col;
+    const newCell = getCell(newRow, newCol, BOARD_SIZE);
+
+    const intervalId = setInterval(
+      () => moveSnake({ newRow, newCell, newCol }),
+      1000
+    );
+
+    return () => clearInterval(intervalId);
+  }, [direction, snake.head, moveSnake]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
