@@ -9,10 +9,10 @@
   },
   "dependencies": {
     "clsx": "^1.2.1",
-    "immer": "^9.0.18",
     "react": "^18.0.0",
+    "react-alert": "^7.0.3",
+    "react-confirm-alert": "^3.0.6",
     "react-dom": "^18.0.0",
-    "use-immer": "^0.8.1",
     "use-sound": "^4.0.1"
   },
   "devDependencies": {

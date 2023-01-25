@@ -18,15 +18,24 @@ const allowDirections = {
   ArrowUp: new Set(['ArrowUp', 'ArrowLeft', 'ArrowRight']),
 };
 
-function Board({ snake, moveSnake, food, snakeBody, setIsGameOver }) {
-  const [direction, setDirection] = useState('ArrowRight');
+function Board({
+  snake,
+  moveSnake,
+  food,
+  snakeBody,
+  setIsGameOver,
+  setDirection,
+  direction,
+}) {
   const boards = getBoards(BOARD_SIZE);
 
   const handleKeyDown = useCallback(
     (e) => {
-      const isAllowed = direction && allowDirections[direction].has(e.key);
-
-      console.log(direction);
+      const isAllowed =
+        direction &&
+        allowDirections[direction] &&
+        allowDirections[direction].has(e.key);
+      setDirection(e.key);
 
       if (!isAllowed) {
         return;
@@ -42,6 +51,16 @@ function Board({ snake, moveSnake, food, snakeBody, setIsGameOver }) {
   );
 
   useEffect(() => {
+    if (direction === '') {
+      return;
+    }
+
+    console.log(direction);
+
+    if (!directions[direction]) {
+      return;
+    }
+
     const [row, col] = directions[direction];
 
     const newRow = snake.head.val.row + row;

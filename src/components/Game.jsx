@@ -1,16 +1,19 @@
 import React from 'react';
 import { useGame } from '../hooks/useGame';
-import { DoublyLinkedList } from '../utils/DoublyLinkedList';
 import Board from './Board';
 
-const snake = new DoublyLinkedList({
-  row: 4,
-  col: 4,
-  cell: 45,
-});
-
 const Game = () => {
-  const { moveSnake, setIsGameOver, food, snakeBody, score } = useGame(snake);
+  const {
+    moveSnake,
+    snake,
+    setIsGameOver,
+    isGameOver,
+    food,
+    snakeBody,
+    setDirection,
+    direction,
+    score,
+  } = useGame();
 
   return (
     <div>
@@ -19,7 +22,10 @@ const Game = () => {
         snake={snake}
         moveSnake={moveSnake}
         food={food}
+        setDirection={setDirection}
+        direction={direction}
         snakeBody={snakeBody}
+        isGameOver={isGameOver}
         setIsGameOver={setIsGameOver}
       />
     </div>
