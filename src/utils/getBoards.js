@@ -1,3 +1,5 @@
+export const BOARD_SIZE = 10;
+
 export const getBoards = (size) => {
   const boards = [];
   let count = 1;

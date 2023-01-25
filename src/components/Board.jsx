@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useSetState } from '../hooks/useSetState';
-import { DoublyLinkedList } from '../utils/DoublyLinkedList';
-import { getBoards } from '../utils/getBoards';
+import { useGame } from '../hooks/useGame';
+import { BOARD_SIZE, getBoards } from '../utils/getBoards';
 import { getCell } from '../utils/getCell';
-import { randomNumber } from '../utils/rendomNumber';
 import Cell from './Cell';
 
 const directions = {
@@ -13,8 +11,6 @@ const directions = {
   ArrowLeft: [0, -1],
 };
 
-const BOARD_SIZE = 10;
-
 const allowDirections = {
   ArrowLeft: new Set(['ArrowDown', 'ArrowUp', 'ArrowLeft']),
   ArrowRight: new Set(['ArrowDown', 'ArrowUp', 'ArrowRight']),
@@ -22,63 +18,9 @@ const allowDirections = {
   ArrowUp: new Set(['ArrowUp', 'ArrowLeft', 'ArrowRight']),
 };
 
-const snake = new DoublyLinkedList({
-  row: 4,
-  col: 4,
-  cell: 45,
-});
-
-const crossBoundary = [-1, BOARD_SIZE];
-
-function Board() {
-  const boards = getBoards(BOARD_SIZE);
-  const [food, setFood] = useState(22);
+function Board({ snake, moveSnake, food, snakeBody }) {
   const [direction, setDirection] = useState('ArrowRight');
-  const [isGameOver, isSetGameOver] = useState(false);
-
-  const snakeBody = useSetState([snake.head.val.cell]);
-
-  const consumeFood = useCallback(
-    ({ newRow, newCell, newCol }) => {
-      snake.addToHead({
-        row: newRow,
-        col: newCol,
-        cell: newCell,
-      });
-      setFood((prevFood) => randomNumber(1, 100));
-      snakeBody.add(newCell);
-    },
-    [snakeBody, food]
-  );
-
-  const moveSnake = useCallback(
-    ({ newCell, newCol, newRow }) => {
-      if (isGameOver) {
-        return;
-      }
-
-      if (crossBoundary.includes(newRow) || crossBoundary.includes(newCol)) {
-        isSetGameOver(true);
-        console.log('Game over');
-        return;
-      }
-
-      if (newCell === food) {
-        consumeFood({ newRow, newCell, newCol });
-      } else {
-        snakeBody.delete(snake.tail.val.cell);
-        snakeBody.add(newCell);
-
-        snake.removeTail();
-        snake.addToHead({
-          row: newRow,
-          col: newCol,
-          cell: newCell,
-        });
-      }
-    },
-    [isGameOver, food, snakeBody, consumeFood]
-  );
+  const boards = getBoards(BOARD_SIZE);
 
   const handleKeyDown = useCallback(
     (e) => {
@@ -108,7 +50,7 @@ function Board() {
 
     const intervalId = setInterval(
       () => moveSnake({ newRow, newCell, newCol }),
-      1000
+      200
     );
 
     return () => clearInterval(intervalId);
@@ -121,22 +63,20 @@ function Board() {
   }, [handleKeyDown]);
 
   return (
-    <div className='flex items-center justify-center w-full h-screen'>
-      <div className='flex flex-col'>
-        {boards.map((board, row) => (
-          <div key={row} className='flex justify-center'>
-            {board.map((num, col) => (
-              <Cell
-                key={num}
-                num={num}
-                board={[row, col]}
-                snakeBody={snakeBody.has(num)}
-                footCell={food === num}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
+    <div className='flex flex-col'>
+      {boards.map((board, row) => (
+        <div key={row} className='flex justify-center'>
+          {board.map((num, col) => (
+            <Cell
+              key={num}
+              num={num}
+              board={[row, col]}
+              snakeBody={snakeBody.has(num)}
+              foodCell={food === num}
+            />
+          ))}
+        </div>
+      ))}
     </div>
   );
 }
