@@ -5,6 +5,7 @@ import { BOARD_SIZE } from '../utils/getBoards';
 import { foodPosition } from '../utils/foodPosition';
 import { useSetState } from './useSetState';
 import snakeFoodSound from '../assets/snakeSoundEating.mp3';
+import gameOverSound from '../assets/gameOver.mp3';
 import { DoublyLinkedList } from '../utils/DoublyLinkedList';
 import { useTopScore } from './useTopScore';
 
@@ -21,6 +22,7 @@ const snakeLL = new DoublyLinkedList({
 
 export const useGame = () => {
   const [snakeFoodConsumedSound] = useSound(snakeFoodSound);
+  const [snakeGameOverSound] = useSound(gameOverSound);
   const [score, setScore] = useState(initialScore);
   const [food, setFood] = useState(initialFoodPosition);
   const [isGameOver, setIsGameOver] = useState(false);
@@ -44,8 +46,6 @@ export const useGame = () => {
     [snakeBody, food]
   );
 
-  console.log(snakeBody.values());
-
   const gameOver = useCallback(() => {
     setSnake(
       new DoublyLinkedList({
@@ -68,6 +68,7 @@ export const useGame = () => {
   const moveSnake = useCallback(
     ({ newCell, newCol, newRow }) => {
       if (isGameOver) {
+        snakeGameOverSound();
         if (window.confirm('Game over')) {
           gameOver();
         }
