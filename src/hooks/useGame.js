@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
 import useSound from 'use-sound';
-import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import { BOARD_SIZE } from '../utils/getBoards';
@@ -66,21 +65,6 @@ export const useGame = () => {
   const moveSnake = useCallback(
     ({ newCell, newCol, newRow }) => {
       if (isGameOver) {
-        // confirmAlert({
-        //   title: 'Confirm to submit',
-        //   message: 'Are you sure to do this.',
-        //   buttons: [
-        //     {
-        //       label: 'Yes',
-        //       onClick: () => alert('Click Yes'),
-        //     },
-        //     {
-        //       label: 'No',
-        //       onClick: () => alert('Click No'),
-        //     },
-        //   ],
-        // });
-
         if (window.confirm('Game over')) {
           gameOver();
         }
