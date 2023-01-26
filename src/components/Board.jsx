@@ -35,15 +35,7 @@ function Board({
       const isAllowed =
         directionRef.current &&
         allowDirections[directionRef.current] &&
-        allowDirections[directionRef.current].has(e.key)
-          ? true
-          : false;
-
-      console.log(
-        'test',
-        directionRef.current,
-        allowDirections[directionRef.current]
-      );
+        allowDirections[directionRef.current].has(e.key);
 
       if (!isAllowed && direction !== '') {
         console.log(isAllowed);
@@ -51,12 +43,6 @@ function Board({
       }
       directionRef.current = e.key;
       setDirection(e.key);
-
-      // if (!directions[e.key] || e.key === '') {
-      //   return;
-      // }
-
-      // setDirection(e.key);
     },
     [setDirection, directionRef.current]
   );
