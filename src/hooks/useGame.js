@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
 import useSound from 'use-sound';
-import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import { BOARD_SIZE } from '../utils/getBoards';
 import { randomNumber } from '../utils/rendomNumber';
