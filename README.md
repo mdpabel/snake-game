@@ -2,6 +2,8 @@
 
 A snake game using a doubly linked list and React is a fun and interactive way to learn about both data structures and front-end development. The doubly linked list allows for efficient manipulation of the snake's movements and growth, while React provides a user-friendly interface for the game.
 
+### Live Link [snake game](snake-game-pi-amber.vercel.app/).
+
 ```js
 export class Node {
   constructor(val) {
