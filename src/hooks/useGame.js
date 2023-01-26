@@ -2,10 +2,11 @@ import { useCallback, useState } from 'react';
 import useSound from 'use-sound';
 
 import { BOARD_SIZE } from '../utils/getBoards';
-import { randomNumber } from '../utils/rendomNumber';
+import { foodPosition } from '../utils/foodPosition';
 import { useSetState } from './useSetState';
 import snakeFoodSound from '../assets/snakeSoundEating.mp3';
 import { DoublyLinkedList } from '../utils/DoublyLinkedList';
+import { useTopScore } from './useTopScore';
 
 const crossBoundary = [-1, BOARD_SIZE];
 
@@ -25,6 +26,7 @@ export const useGame = () => {
   const [isGameOver, setIsGameOver] = useState(false);
   const [snake, setSnake] = useState(snakeLL);
   const [direction, setDirection] = useState('');
+  const { setLocalStorageScore } = useTopScore();
 
   const snakeBody = useSetState([snake.head.val.cell]);
 
@@ -35,7 +37,7 @@ export const useGame = () => {
         col: newCol,
         cell: newCell,
       });
-      setFood((prevFood) => randomNumber(1, 100));
+      setFood(() => foodPosition(1, 100, snakeBody));
 
       snakeBody.add(newCell);
     },
@@ -52,6 +54,8 @@ export const useGame = () => {
         cell: 45,
       })
     );
+
+    setLocalStorageScore(score);
 
     setFood(initialFoodPosition);
     setScore(initialScore);

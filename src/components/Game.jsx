@@ -1,6 +1,7 @@
 import React from 'react';
 import { useGame } from '../hooks/useGame';
 import Board from './Board';
+import Score from './Score';
 
 const Game = () => {
   const {
@@ -17,7 +18,7 @@ const Game = () => {
 
   return (
     <div>
-      <div className='py-4 text-2xl text-center'>Score : {score} </div>
+      <Score score={score} />
       <Board
         snake={snake}
         moveSnake={moveSnake}
