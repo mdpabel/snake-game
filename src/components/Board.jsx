@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { useGame } from '../hooks/useGame';
 import { BOARD_SIZE, getBoards } from '../utils/getBoards';
 import { getCell } from '../utils/getCell';
@@ -28,26 +28,37 @@ function Board({
   direction,
 }) {
   const boards = getBoards(BOARD_SIZE);
+  const directionRef = useRef(direction);
 
   const handleKeyDown = useCallback(
     (e) => {
       const isAllowed =
-        direction &&
-        allowDirections[direction] &&
-        allowDirections[direction].has(e.key);
-      setDirection(e.key);
+        directionRef.current &&
+        allowDirections[directionRef.current] &&
+        allowDirections[directionRef.current].has(e.key)
+          ? true
+          : false;
 
-      if (!isAllowed) {
+      console.log(
+        'test',
+        directionRef.current,
+        allowDirections[directionRef.current]
+      );
+
+      if (!isAllowed && direction !== '') {
+        console.log(isAllowed);
         return;
       }
-
-      if (!directions[e.key] || snake.length === 0 || e.key === '') {
-        return;
-      }
-
+      directionRef.current = e.key;
       setDirection(e.key);
+
+      // if (!directions[e.key] || e.key === '') {
+      //   return;
+      // }
+
+      // setDirection(e.key);
     },
-    [direction]
+    [setDirection, directionRef.current]
   );
 
   useEffect(() => {
@@ -84,7 +95,7 @@ function Board({
     window.addEventListener('keydown', handleKeyDown);
 
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyDown]);
+  }, [handleKeyDown, setIsGameOver]);
 
   return (
     <div className='flex flex-col'>

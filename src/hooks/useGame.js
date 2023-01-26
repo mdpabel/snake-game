@@ -43,7 +43,7 @@ export const useGame = () => {
 
       snakeBody.add(newCell);
     },
-    [snakeBody, food]
+    [snakeBody, setFood]
   );
 
   const gameOver = useCallback(() => {
@@ -63,7 +63,7 @@ export const useGame = () => {
     setDirection('');
     snakeBody.clear();
     snakeBody.add(45);
-  }, [snakeBody, direction, isGameOver, score, food, snake]);
+  }, [snakeBody, setDirection, setIsGameOver, setScore, setFood]);
 
   const moveSnake = useCallback(
     ({ newCell, newCol, newRow }) => {
@@ -97,7 +97,7 @@ export const useGame = () => {
         });
       }
     },
-    [isGameOver, food, snakeBody, consumeFood, score]
+    [setIsGameOver, snakeBody, consumeFood, setScore]
   );
 
   return {
