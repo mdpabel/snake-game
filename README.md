@@ -4,6 +4,12 @@ A snake game using a doubly linked list and React is a fun and interactive way t
 
 ### Live Link [snake game](snake-game-pi-amber.vercel.app/).
 
+## Screenshots
+
+![App Screenshot](./screenshort.gif)
+
+## Snake Doubly Linked List
+
 ```js
 export class Node {
   constructor(val) {
@@ -64,10 +70,6 @@ export class DoublyLinkedList {
   }
 }
 ```
-
-## Screenshots
-
-![App Screenshot](./screenshort.gif)
 
 ## Tech Stack
 
